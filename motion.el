@@ -7,7 +7,7 @@
 ;; Homepage: https://github.com/leotaku/motion
 ;; Keywords: emulations
 ;; Package-Version: 0.1.0
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "29.0"))
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 ;;; Commentary:
 
 (require 'seq)
+(require 'keymap)
 
 ;;; Code:
 
@@ -137,8 +138,7 @@
       (if (> arg 0)
           (goto-line arg)
         (goto-line (+ arg (line-number-at-pos (point-max)))))
-    (let ((keys (listify-key-sequence (kbd "C-g"))))
-      (setq unread-command-events (nconc unread-command-events keys)))))
+    (funcall-interactively (keymap-lookup nil "C-g"))))
 
 (defun motion-kill-region-or-line (arg)
   (interactive "p")
