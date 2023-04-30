@@ -87,7 +87,7 @@
       (when (> 0 n) (backward-char)))
     (dotimes (_ (abs n)) (mapc f syntaxes))
     (if reverse-adjust
-        (when (and (not (region-active-p)) (< 0 n)) (backward-char))
+        (when (and (not (use-region-p)) (< 0 n)) (backward-char))
       (when (> 0 n) (backward-char)))))
 
 (defvar-local motion-last-char nil)
@@ -142,13 +142,13 @@
 
 (defun motion-kill-region-or-line (arg)
   (interactive "p")
-  (if (region-active-p)
+  (if (use-region-p)
       (call-interactively #'kill-region)
     (kill-whole-line arg)))
 
 (defun motion-copy-region-or-line (arg)
   (interactive "p")
-  (if (region-active-p)
+  (if (use-region-p)
       (call-interactively #'copy-region-as-kill)
     (let ((begin (point-at-bol))
           (adapt (if (= arg 0) 0 (/ arg (abs arg)))))
@@ -195,7 +195,7 @@
 
 (defun motion-mark-cycle ()
   (interactive)
-  (if (region-active-p)
+  (if (use-region-p)
       (if (null rectangle-mark-mode)
           (rectangle-mark-mode)
         (deactivate-mark))
