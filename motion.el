@@ -125,6 +125,82 @@
     (backward-char (if (< 0 count) (if until 2 1) (if until -1 0)))
     (point)))
 
+(defun motion-replace-char (arg)
+  (interactive "p")
+  (let ((char (char-to-string (read-char))))
+    (save-excursion
+      (dotimes (_ arg) (delete-char 1) (insert char)))))
+
+(defun goto-or-quit (arg)
+  (interactive "P")
+  (if (numberp arg)
+      (if (> arg 0)
+          (goto-line arg)
+        (goto-line (+ arg (line-number-at-pos (point-max)))))
+    (let ((keys (listify-key-sequence (kbd "C-g"))))
+      (setq unread-command-events (nconc unread-command-events keys)))))
+
+(defun kill-region-or-line (arg)
+  (interactive "p")
+  (if (region-active-p)
+      (call-interactively #'kill-region)
+    (kill-whole-line arg)))
+
+(defun copy-region-or-line (arg)
+  (interactive "p")
+  (if (region-active-p)
+      (call-interactively #'copy-region-as-kill)
+    (let ((begin (point-at-bol))
+          (adapt (if (= arg 0) 0 (/ arg (abs arg)))))
+      (save-excursion
+        (condition-case nil (forward-line (- arg adapt)) (quit))
+        (copy-region-as-kill begin (point-at-eol))
+        (kill-append "\n" nil)))))
+
+(defun yank-put-before (arg)
+  (interactive "p")
+  (let ((kill (current-kill 0)))
+    (if (string-suffix-p "\n" kill)
+        (save-excursion
+          (goto-char (point-at-bol))
+          (dotimes (_ arg) (insert kill)))
+      (dotimes (_ arg) (insert kill)))))
+
+(defun yank-put-after (arg)
+  (interactive "p")
+  (let ((kill (current-kill 0)))
+    (if (string-suffix-p "\n" kill)
+        (save-excursion
+          (when (= (point-at-eol) (point-max))
+            (goto-char (point-max))
+            (newline))
+          (forward-line 1)
+          (dotimes (_ arg) (insert kill))
+          (forward-line -2))
+      (dotimes (_ arg)
+        (insert kill)
+        (backward-char (length kill))))))
+
+(defun kill-ring-uncycle (arg)
+  (interactive "p")
+  (kill-ring-cycle (- arg)))
+
+(defun kill-ring-cycle (arg)
+  (interactive "p")
+  (let* ((length (seq-length kill-ring))
+         (to-append (% (+ length arg) length))
+         (_ (current-kill 0)))
+    (setq kill-ring (append (seq-drop kill-ring to-append)
+                            (seq-take kill-ring to-append)))))
+
+(defun switch-mark-command ()
+  (interactive)
+  (if (region-active-p)
+      (if (null rectangle-mark-mode)
+          (rectangle-mark-mode)
+        (deactivate-mark))
+    (set-mark-command nil)))
+
 (provide 'motion)
 
 ;;; motion.el ends here
