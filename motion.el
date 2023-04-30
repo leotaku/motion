@@ -24,7 +24,7 @@
 
 ;;; Commentary:
 
-;; TODO
+(require 'seq)
 
 ;;; Code:
 
