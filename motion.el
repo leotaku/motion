@@ -32,51 +32,62 @@
 (defcustom motion-mode-function #'ignore
   "Mode function used for motions that change the editing mode.")
 
+;;;###autoload
 (defun motion-insert ()
   (interactive)
   (funcall motion-mode-function -1))
 
+;;;###autoload
 (defun motion-append ()
   (interactive)
   (when (/= (point) (point-at-eol))
     (forward-char))
   (motion-insert))
 
+;;;###autoload
 (defun motion-Insert ()
   (interactive)
   (back-to-indentation)
   (motion-insert))
 
+;;;###autoload
 (defun motion-Append ()
   (interactive)
   (end-of-line)
   (motion-insert))
 
+;;;###autoload
 (defun motion-change (arg)
   (interactive "p")
   (motion-kill-region-or-line arg)
   (motion-insert))
 
+;;;###autoload
 (defun motion-forward-word (arg)
   (interactive "p")
   (motion-syntax arg nil "[:word:]" "^[:word:]"))
 
+;;;###autoload
 (defun motion-forward-end (arg)
   (interactive "p")
   (motion-syntax arg t "^[:word:]" "[:word:]"))
 
+;;;###autoload
 (defun motion-backward-word (arg)
   (interactive "p")
   (motion-forward-end (- arg)))
 
+;;;###autoload
 (defun motion-forward-Word (arg)
   (interactive "p")
   (motion-syntax arg nil "^[:space:]\n" "[:space:]\n"))
 
+;;;###autoload
 (defun motion-forward-End (arg)
   (interactive "p")
   (motion-syntax arg t "[:space:]\n" "^[:space:]\n"))
 
+;;;###autoload
 (defun motion-backward-Word (arg)
   (interactive "p")
   (motion-forward-End (- arg)))
@@ -95,6 +106,7 @@
 (defvar-local motion-last-count nil)
 (defvar-local motion-last-until nil)
 
+;;;###autoload
 (defun motion-goto-char (arg)
   (interactive "p")
   (let ((char (char-to-string (read-char))))
@@ -103,6 +115,7 @@
     (setq motion-last-count arg)
     (setq motion-last-until nil)))
 
+;;;###autoload
 (defun motion-till-char (arg)
   (interactive "p")
   (let ((char (char-to-string (read-char))))
@@ -111,6 +124,7 @@
     (setq motion-last-count arg)
     (setq motion-last-until t)))
 
+;;;###autoload
 (defun motion-repeat-char (arg)
   (interactive "p")
   (when (null motion-last-char)
@@ -126,12 +140,14 @@
     (backward-char (if (< 0 count) (if until 2 1) (if until -1 0)))
     (point)))
 
+;;;###autoload
 (defun motion-replace-char (arg)
   (interactive "p")
   (let ((char (char-to-string (read-char))))
     (save-excursion
       (dotimes (_ arg) (delete-char 1) (insert char)))))
 
+;;;###autoload
 (defun motion-goto-or-quit (arg)
   (interactive "P")
   (if (numberp arg)
@@ -140,12 +156,14 @@
         (goto-line (+ arg (line-number-at-pos (point-max)))))
     (funcall-interactively (keymap-lookup nil "C-g"))))
 
+;;;###autoload
 (defun motion-kill-region-or-line (arg)
   (interactive "p")
   (if (use-region-p)
       (call-interactively #'kill-region)
     (kill-whole-line arg)))
 
+;;;###autoload
 (defun motion-copy-region-or-line (arg)
   (interactive "p")
   (if (use-region-p)
@@ -157,6 +175,7 @@
         (copy-region-as-kill begin (point-at-eol))
         (kill-append "\n" nil)))))
 
+;;;###autoload
 (defun motion-put-before (arg)
   (interactive "p")
   (let ((kill (current-kill 0)))
@@ -166,6 +185,7 @@
           (dotimes (_ arg) (insert kill)))
       (dotimes (_ arg) (insert kill)))))
 
+;;;###autoload
 (defun motion-put-after (arg)
   (interactive "p")
   (let ((kill (current-kill 0)))
@@ -181,10 +201,12 @@
         (insert kill)
         (backward-char (length kill))))))
 
+;;;###autoload
 (defun motion-kill-uncycle (arg)
   (interactive "p")
   (motion-kill-cycle (- arg)))
 
+;;;###autoload
 (defun motion-kill-cycle (arg)
   (interactive "p")
   (let* ((length (seq-length kill-ring))
@@ -193,6 +215,7 @@
     (setq kill-ring (append (seq-drop kill-ring to-append)
                             (seq-take kill-ring to-append)))))
 
+;;;###autoload
 (defun motion-mark-cycle ()
   (interactive)
   (if (use-region-p)
