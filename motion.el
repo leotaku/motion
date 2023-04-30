@@ -53,7 +53,7 @@
 
 (defun motion-change (arg)
   (interactive "p")
-  (kill-region-or-line arg)
+  (motion-kill-region-or-line arg)
   (motion-insert))
 
 (defun motion-forward-word (arg)
@@ -131,7 +131,7 @@
     (save-excursion
       (dotimes (_ arg) (delete-char 1) (insert char)))))
 
-(defun goto-or-quit (arg)
+(defun motion-goto-or-quit (arg)
   (interactive "P")
   (if (numberp arg)
       (if (> arg 0)
@@ -140,13 +140,13 @@
     (let ((keys (listify-key-sequence (kbd "C-g"))))
       (setq unread-command-events (nconc unread-command-events keys)))))
 
-(defun kill-region-or-line (arg)
+(defun motion-kill-region-or-line (arg)
   (interactive "p")
   (if (region-active-p)
       (call-interactively #'kill-region)
     (kill-whole-line arg)))
 
-(defun copy-region-or-line (arg)
+(defun motion-copy-region-or-line (arg)
   (interactive "p")
   (if (region-active-p)
       (call-interactively #'copy-region-as-kill)
@@ -157,7 +157,7 @@
         (copy-region-as-kill begin (point-at-eol))
         (kill-append "\n" nil)))))
 
-(defun yank-put-before (arg)
+(defun motion-put-before (arg)
   (interactive "p")
   (let ((kill (current-kill 0)))
     (if (string-suffix-p "\n" kill)
@@ -166,7 +166,7 @@
           (dotimes (_ arg) (insert kill)))
       (dotimes (_ arg) (insert kill)))))
 
-(defun yank-put-after (arg)
+(defun motion-put-after (arg)
   (interactive "p")
   (let ((kill (current-kill 0)))
     (if (string-suffix-p "\n" kill)
@@ -181,11 +181,11 @@
         (insert kill)
         (backward-char (length kill))))))
 
-(defun kill-ring-uncycle (arg)
+(defun motion-kill-uncycle (arg)
   (interactive "p")
-  (kill-ring-cycle (- arg)))
+  (motion-kill-cycle (- arg)))
 
-(defun kill-ring-cycle (arg)
+(defun motion-kill-cycle (arg)
   (interactive "p")
   (let* ((length (seq-length kill-ring))
          (to-append (% (+ length arg) length))
@@ -193,7 +193,7 @@
     (setq kill-ring (append (seq-drop kill-ring to-append)
                             (seq-take kill-ring to-append)))))
 
-(defun switch-mark-command ()
+(defun motion-mark-cycle ()
   (interactive)
   (if (region-active-p)
       (if (null rectangle-mark-mode)
