@@ -1,0 +1,21 @@
+name: check
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - 'releases/*'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: purcell/setup-emacs@master
+      with:
+        version: snapshot
+    - uses: leotaku/elisp-check@master
+      with:
+        file: motion.el
+        ignore_warnings: false
