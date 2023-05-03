@@ -1,4 +1,4 @@
-;;; motion.el --- Various useful motions and editing commands -*- lexical-binding: t; -*-
+;;; motion.el --- Various useful text motions and editing commands -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2023-2023 Leo Gaskin
 
@@ -23,6 +23,13 @@
 ;; along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
+
+;; The motion package provides various text motions and editing
+;; commands.  It can be used in conjunction with other packages and
+;; built-in Emacs facilities to design your own modal editing setup.
+;;
+;; Please consult README.md from the package repository and elisp
+;; docstrings for more thorough documentation.
 
 (require 'seq)
 (require 'keymap)
