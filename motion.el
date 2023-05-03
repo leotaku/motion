@@ -164,6 +164,15 @@
     (funcall-interactively (keymap-lookup nil "C-g"))))
 
 ;;;###autoload
+(defun motion-delete (arg)
+  (interactive "p")
+  (if (use-region-p)
+      (mapc
+       (lambda (it) (delete-region (car it) (cdr it)))
+       (region-bounds))
+    (delete-char arg)))
+
+;;;###autoload
 (defun motion-kill-region-or-line (arg)
   (interactive "p")
   (if (use-region-p)
