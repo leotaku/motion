@@ -1,6 +1,6 @@
 ;;; motion.el --- Various useful text motions and editing commands -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2023-2023 Leo Gaskin
+;; Copyright (C) 2023-2024 Leo Gaskin
 
 ;; Author: Leo Gaskin <leo.gaskin@le0.gs>
 ;; Created: 30 April 2023
