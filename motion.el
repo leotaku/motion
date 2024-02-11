@@ -37,7 +37,8 @@
 ;;; Code:
 
 (defcustom motion-mode-function #'ignore
-  "Mode function used for motions that change the editing mode.")
+  "Mode function used for motions that change the editing mode."
+  :type 'function)
 
 ;;;###autoload
 (defun motion-insert ()
