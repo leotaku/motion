@@ -36,6 +36,11 @@
 
 ;;; Code:
 
+(defgroup motion '()
+  "Various useful text motions and editing commands."
+  :group 'editing
+  :prefix "modalka-")
+
 (defcustom motion-mode-function #'ignore
   "Mode function used for motions that change the editing mode."
   :type 'function)
