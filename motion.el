@@ -143,7 +143,7 @@
   (when (null motion-last-char)
     (error "No previous jump that can be repeated"))
   (let* ((sign (/ motion-last-count (abs motion-last-count)))
-         (point (motion-find-char motion-last-char sign motion-last-until)))
+         (point (motion-find-char motion-last-char (* arg sign) motion-last-until)))
     (goto-char point)))
 
 (defun motion-find-char (char count &optional until)
