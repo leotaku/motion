@@ -165,8 +165,8 @@
   (interactive "P")
   (if (numberp arg)
       (if (> arg 0)
-          (goto-line arg)
-        (goto-line (+ arg (line-number-at-pos (point-max)))))
+          (funcall-interactively #'goto-line arg)
+        (funcall-interactively #'goto-line (+ arg (line-number-at-pos (point-max)))))
     (funcall-interactively (keymap-lookup nil "C-g"))))
 
 ;;;###autoload
