@@ -47,7 +47,7 @@
 ;;;###autoload
 (defun motion-append ()
   (interactive)
-  (when (/= (point) (point-at-eol))
+  (when (/= (point) (line-end-position))
     (forward-char))
   (motion-insert))
 
@@ -184,11 +184,11 @@
   (interactive "p")
   (if (use-region-p)
       (call-interactively #'copy-region-as-kill)
-    (let ((begin (point-at-bol))
+    (let ((begin (line-beginning-position))
           (adapt (if (= arg 0) 0 (/ arg (abs arg)))))
       (save-excursion
         (condition-case nil (forward-line (- arg adapt)) (quit))
-        (copy-region-as-kill begin (point-at-eol))
+        (copy-region-as-kill begin (line-end-position))
         (kill-append "\n" nil)))))
 
 ;;;###autoload
@@ -197,7 +197,7 @@
   (let ((kill (current-kill 0)))
     (if (string-suffix-p "\n" kill)
         (save-excursion
-          (goto-char (point-at-bol))
+          (goto-char (line-beginning-position))
           (dotimes (_ arg) (insert kill)))
       (dotimes (_ arg) (insert kill)))))
 
@@ -207,7 +207,7 @@
   (let ((kill (current-kill 0)))
     (if (string-suffix-p "\n" kill)
         (save-excursion
-          (when (= (point-at-eol) (point-max))
+          (when (= (line-end-position) (point-max))
             (goto-char (point-max))
             (newline))
           (forward-line 1)
